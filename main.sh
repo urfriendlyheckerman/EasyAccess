@@ -2,6 +2,11 @@
 #start of script - EasyAccess 
 #This script is used for when Linux users are lazy or new to the system and need to use the cli for their couchdb database, this tool utilizes curl for easy use. This tool may be painful to make but who cares lol
 
+#TODO:
+#Add a feature so it remembers your database ip and/or if you change database ip's then you can enter a new one and it will remember it
+#Use node.js and/or python with this to help, maybe idk
+#Add the menu and everything else hahaha
+
 #root check
 #if [ "$(id -u)" != 0 ]; then 
   #echo "This script requires root. 'sudo su $0'"
