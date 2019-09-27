@@ -5,7 +5,7 @@
 #TODO:
 #Add a feature so it remembers your database ip and/or if you change database ip's then you can enter a new one and it will remember it
 #Use node.js and/or python with this to help, maybe idk
-#Add the menu and everything else hahaha
+#Add the rest of the functions and document menu, maybe update to easier menu
 
 #root check
 #if [ "$(id -u)" != 0 ]; then 
@@ -14,6 +14,8 @@
 #fi
 
 #VARS
+  #random_vars
+TIME=2.5  
   #colours
 BLUE='\e[34m'
 YELLOW='\e[33m'
@@ -33,9 +35,10 @@ BOLD='\e[1m'
 REV='\e[7m'
 #END_OF_VARS
 
-#if [ ! $1 ]; then echo "Usage: ./main.sh <dbip>"
+#if [ ! $1 ]; then echo "Usage: ./main.sh <dbip> <dbport>"
 
 #dbip=$1
+#dbport=$2
 
 #functions
 banner() {
@@ -46,6 +49,7 @@ banner() {
   echo "| Coded by urfriendlyheckerman, best hakka |"
   echo "|------------------------------------------|"
   sleep 2.3
+  clear
 }
 
 pause() {
@@ -53,19 +57,99 @@ pause() {
   [ -z $message ] && message="Press [Enter] to continue"
   read -p "$message" readEnterKey
 }
-}
-menu() {
 
+menu() {
+  clear
+  echo "Welcome to the tool! Here you will be able to do a variety of options for your database! :)"
+  echo ""
+  system() {
+    VERSION=`cat /etc/os-release | grep -i ^PRETTY`
+    if [ -f /etc/os-release ]
+    then 
+      echo "Your system version is $VERSION"
+    else
+      echo "System not supported"
+    fi
+  }
+  echo "-----------------------------------------------------------------"
+  system
+  echo "-----------------------------------------------------------------"
+  echo ""
+  echo "[1] Check all Databases"
+  echo "[2] Create a Database"
+  echo "[3] Delete a Database"
+  echo "[4] Get Database Info"
+  echo "[5] Create a Database User"
+  echo "[6] Documents"
+  
 }
+
+chdb() {
+  curl -X GET http://$dbip:$dbport/_all_dbs
+}
+cdb() {
+  read -p "Name of database you want to create: " dbname
+  curl -X PUT http://$dbip:$dbport/$dbname
+}
+deldb() {
+  read -p "Database you want to delete: " dbname2
+  curl -X DELETE http://$dbip:$dbport/$dbname2
+}
+dbinf() {
+  read -p "Database Name: " dbname3
+  curl -X GET http://$dbip:$dbport/$dbname3
+}
+cuser() {
+  read -p "Username you want to create: " user
+  #finding a way with curl xD
+}
+doc() {
+  #whole new menu haha
+  menu2() {
+    clear
+    echo "This is the document parts of the program! In this area you will be able to control all your documents. Have fun ;) "
+    sleep $TIME
+    clear
+    echo ""
+    echo "|------------------|"
+    echo "| Document Options |"
+    echo "|------------------|"
+    echo ""
+    echo "[1] Create Document"
+    echo "[2] Delete Document"
+    echo "[3] Edit Document"
+    echo "[4] Download Document"
+    echo "[0] Go Back"
+  }
+  roptions2() {
+    local choice
+    read -p "Choose an option: " choice2
+    case $choice2 in
+      1) cdoc ;;
+      2) deldoc ;;
+      3) edoc ;;
+      4) ddoc ;;
+      0) gbk ;;
+      *) echo "Error..."
+    esac
+  }
+  while true
+  do
+    menu2
+    roptions2
+  done
+}
+
 roptions() {
   local choice 
-  read -p "Choose the option: " choice
+  read -p "Choose an option: " choice
   case $choice in 
-    1) ;;
-    2) ;;
-    3) ;;
-    4) ;;
-    5) ;;
+    1) chdb ;;
+    2) cdb ;;
+    3) deldb ;;
+    4) dbinf ;;
+    5) cuser ;;
+    6) doc ;;
     99) exit 1 ;; 
     *) echo "Error..."
   esac  
@@ -76,11 +160,7 @@ banner
 trap '' SIGNIT SIGQUIT SIGTSTP
 
 while true
-do 
+do
   menu 
-  roptions
+  #roptions
 done
-#https://www.javatpoint.com/nodejs-couchdb
-#https://www.javatpoint.com/python-couchdb
-#https://www.javatpoint.com/java-couchdb
-#https://www.javatpoint.com/php-couchdb
