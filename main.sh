@@ -5,7 +5,6 @@
 #TODO:
 #Add a feature so it remembers your database ip and/or if you change database ip's then you can enter a new one and it will remember it
 #Use node.js and/or python with this to help, maybe idk
-#Add the rest of the functions and document menu, maybe update to easier menu
 
 #root check
 #if [ "$(id -u)" != 0 ]; then 
@@ -108,7 +107,10 @@ doc() {
   menu2() {
     clear
     echo "This is the document parts of the program! In this area you will be able to control all your documents. Have fun ;) "
-    sleep $TIME
+    echo "-----------------------------------------------------------------"
+    echo ""
+    echo "NOTE - For this you will need to know the basic syntax of JSON!"
+    sleep 5
     clear
     echo ""
     echo "|------------------|"
@@ -121,6 +123,15 @@ doc() {
     echo "[4] Download Document"
     echo "[0] Go Back"
   }
+  cdoc() {
+    echo -n "Whats the Database you want to use: "
+    read dbname4
+    echo -n "ID for Document: "
+    read idnum
+    echo -n "Now enter the Document Contents: "
+    read doccon
+    curl -X PUT http://$dbip:$dbport/$dbname4/"$idnum" -d ' { $doccon } '
+  }                                    
   roptions2() {
     local choice
     read -p "Choose an option: " choice2
@@ -162,5 +173,5 @@ trap '' SIGNIT SIGQUIT SIGTSTP
 while true
 do
   menu 
-  #roptions
+  roptions
 done
